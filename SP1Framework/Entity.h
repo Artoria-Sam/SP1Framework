@@ -6,10 +6,12 @@ class Entity
 
 private:
 	Position position;
+	bool alive;
 
 public:
-
-	bool Alive;
+	~Entity();
+	Entity(bool alive);
+	
 	
 
 };

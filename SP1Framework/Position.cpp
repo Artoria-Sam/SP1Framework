@@ -31,3 +31,16 @@ COORD Position::returnPos()
 	return pos;
 }
 
+int Position::getX()
+{
+
+	return pos.X;
+
+}
+
+int Position::getY()
+{
+
+	return pos.Y;
+}
+
