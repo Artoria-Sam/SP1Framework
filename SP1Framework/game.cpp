@@ -308,7 +308,9 @@ void render()
     }
     renderFramerate();      // renders debug information, frame rate, elapsed time, etc
     renderInputEvents();    // renders status of input events
+    renderbiscuit();
     renderToScreen();       // dump the contents of the buffer to the screen, one frame worth of game
+
 }
 
 void clearScreen()
@@ -340,8 +342,11 @@ void renderSplashScreen()  // renders the splash screen
 void renderGame()
 {
     renderMap();        // renders the map to the buffer first
-    renderCharacter();  // renders the character into the buffer
+    renderCharacter();// renders the character into the buffer
+    renderbiscuit();
+
 }
+
 
 void renderMap()
 {
@@ -421,6 +426,22 @@ void renderInputEvents()
     }
 
 }
+
+void renderbiscuit()
+{
+    COORD pos;
+    pos.X = 3;
+    pos.Y = 3;
+    WORD charColor = 2;
+    if (g_sChar.m_bActive)
+    {
+        charColor = 1;
+    }
+     g_Console.writeToBuffer(pos, 'z', 55 );
+
+}
+
+
 
 
 
