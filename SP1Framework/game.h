@@ -39,9 +39,18 @@ enum EKEYS
 // Enumeration for the different screen states
 enum EGAMESTATES
 {
-    S_SPLASHSCREEN,
+    S_MENU,
     S_GAME,
+    S_WIN,
+    S_LOSE,
+    S_GAME2,
     S_COUNT
+};
+
+enum TERRAIN
+{
+    W = 0,
+    P = 20,
 };
 
 // struct for the game character
