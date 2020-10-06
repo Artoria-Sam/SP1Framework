@@ -16,11 +16,14 @@
 
 double  g_dElapsedTime;
 double  g_dDeltaTime;
+double EnemyUpdateRate = 0.0;
+
 SKeyEvent g_skKeyEvent[K_COUNT];
 SMouseEvent g_mouseEvent;
 
 // Game specific variables here
 SGameChar   g_sChar;
+SGameChar  g_sGhost[4];
 EGAMESTATES g_eGameState = S_MENU; // initial state
 Map g_sMap;
 
@@ -51,6 +54,12 @@ void init( void )
     // remember to set your keyboard handler, so that your functions can be notified of input events
     g_Console.setKeyboardHandler(keyboardHandler);
     g_Console.setMouseHandler(mouseHandler);
+    for (int i = 0; i < 4; i++)
+    {
+        g_sGhost[i].m_cLocation.X = (rand() % 68);
+        g_sGhost[i].m_cLocation.Y = (rand() % 22);
+        g_sGhost[i].m_bActive = true;
+    }
 }
 
 //--------------------------------------------------------------
@@ -235,6 +244,8 @@ void updateGame()       // gameplay logic
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
                         // sound can be played here too.
+    UpdateGhost();
+    ghostMovement();
 }
 
 
@@ -310,6 +321,7 @@ void render()
     renderInputEvents();    // renders status of input events
     renderbiscuit();
     renderToScreen();       // dump the contents of the buffer to the screen, one frame worth of game
+   
 
 }
 
@@ -344,7 +356,7 @@ void renderGame()
     renderMap();        // renders the map to the buffer first
     renderCharacter();// renders the character into the buffer
     renderbiscuit();
-
+    renderGhost();
 }
 
 
@@ -360,7 +372,7 @@ void renderMap()
         }
     }
 
-
+    
    
 }
 
@@ -369,12 +381,12 @@ void renderMap()
 void renderCharacter()
 {
     // Draw the location of the character
-    WORD charColor = 0X0E;
+    WORD charColor = 0X0C;
     if (g_sChar.m_bActive)
     {
-        charColor = 0X0E;
+        charColor = 224;
     }
-    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)79, charColor);
+    g_Console.writeToBuffer(g_sChar.m_cLocation, (char)7, charColor);
 }
 
 void renderFramerate()
@@ -441,7 +453,75 @@ void renderbiscuit()
 
 }
 
+void UpdateGhost()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        if (g_sChar.m_cLocation.X == g_sGhost[i].m_cLocation.X &&
+            g_sChar.m_cLocation.Y == g_sGhost[i].m_cLocation.Y && g_sGhost[i].m_bActive == true)
+        {
+            g_eGameState = S_LOSE;
+        }
+    }
+
+    
+    
+        
+    
+}
 
 
+void ghostMovement()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        EnemyUpdateRate += g_dDeltaTime;
+        int random = rand() % 8 + 1;
+        switch (random)
+        {
 
+        case 1:
+            if (g_sGhost[i].m_cLocation.X < g_Console.getConsoleSize().X - 1 && EnemyUpdateRate > 0.4)
+            {
+                g_sGhost[i].m_cLocation.X++;
+                EnemyUpdateRate = 0;
+            }
+            break;
+        case 2:
+            if (g_sGhost[i].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && EnemyUpdateRate > 0.4)
+            {
+                g_sGhost[i].m_cLocation.Y++;
+                EnemyUpdateRate = 0;
+            }
+            break;
+        case 3:
+            if (g_sGhost[i].m_cLocation.X > 0 && EnemyUpdateRate > 0.4)
+            {
+                g_sGhost[i].m_cLocation.X--;
+                EnemyUpdateRate = 0;
+            }
+            break;
+        case 4:
+            if (g_sGhost[i].m_cLocation.Y > 0 && EnemyUpdateRate > 0.4)
+            {
+                g_sGhost[i].m_cLocation.Y--;
+                EnemyUpdateRate = 0;
+            }
+            break;
 
+        }
+
+    }
+}
+
+void renderGhost()
+{
+
+    for (int i = 0; i < 4; i++)
+    {
+        //if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y] != W)
+        //{
+        g_Console.writeToBuffer(g_sGhost[i].m_cLocation, (char)31, 7);
+        //}
+    }
+}
