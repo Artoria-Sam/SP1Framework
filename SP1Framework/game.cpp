@@ -441,15 +441,13 @@ void renderInputEvents()
 
 void renderbiscuit()
 {
-    COORD pos;
-    pos.X = 3;
-    pos.Y = 3;
+  
     WORD charColor = 2;
     if (g_sChar.m_bActive)
     {
         charColor = 1;
     }
-     g_Console.writeToBuffer(pos, 'z', 55 );
+     g_Console.writeToBuffer(, 'z', 55 );
 
 }
 
