@@ -51,6 +51,7 @@ enum TERRAIN
 {
     W = 0,
     P = 20,
+    D = 40,
 };
 
 // struct for the game character
@@ -59,6 +60,9 @@ struct SGameChar
     COORD m_cLocation;
     bool  m_bActive;
 
+    COORD m_dWaypoints[10];
+    COORD m_eWaypoints[4];
+    int m_fDirection = 0;
 };
 
 
