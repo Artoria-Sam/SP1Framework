@@ -26,6 +26,7 @@ SMouseEvent g_mouseEvent;
 SGameChar   g_sChar;
 SGameChar  g_sGhost[4];
 SGameChar   g_biscuit[10];
+int score;
 EGAMESTATES g_eGameState = S_MENU; // initial state
 Map g_sMap;
 
@@ -413,8 +414,15 @@ void renderFramerate()
     COORD c;
     // displays the framerate
     std::ostringstream ss;
-    ss << std::fixed << std::setprecision(3);
-    ss << 1.0 / g_dDeltaTime << "fps";
+    //ss << std::fixed << std::setprecision(3);
+    //ss << 1.0 / g_dDeltaTime << "fps";
+    //c.X = g_Console.getConsoleSize().X - 9;
+    //c.Y = 0;
+    //g_Console.writeToBuffer(c, ss.str());
+
+    //display score
+    ss.str();
+    ss << score <<  " points";
     c.X = g_Console.getConsoleSize().X - 9;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str());
@@ -425,6 +433,7 @@ void renderFramerate()
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
+
 }
 
 // this is an example of how you would use the input events
@@ -482,6 +491,7 @@ void updatebiscuit()
         if (g_biscuit[i].m_bActive && g_biscuit[i].m_cLocation.X == g_sChar.m_cLocation.X && g_biscuit[i].m_cLocation.Y == g_sChar.m_cLocation.Y)
         {
             g_biscuit[i].m_bActive = false;
+            score += 1;
         }
     }
 }
@@ -635,16 +645,21 @@ void renderGhost()
 
 void renderlosescreen()
 {
+    std::ostringstream ss;
+
+    ss.str();
+    ss << score;
+
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
     c.X = c.X / 2 - 9;
-    g_Console.writeToBuffer(c, "YOU ARE DEAD", 0x03);
+    g_Console.writeToBuffer(c, "YOUR SCORE IS", 0x09);
     c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Spacebar' to retry", 0x09);
+    c.X = g_Console.getConsoleSize().X / 2;
+    g_Console.writeToBuffer(c, ss.str(), 0x09);
     c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 9;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+    c.X = g_Console.getConsoleSize().X / 2 - 12;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit and 'spacebar' to retry", 0x09);
 
 
 }
