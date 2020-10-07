@@ -17,6 +17,7 @@
 double  g_dElapsedTime;
 double  g_dDeltaTime;
 double EnemyUpdateRate = 0.0;
+double EnemyUpdateRate2 = 0.0;
 
 SKeyEvent g_skKeyEvent[K_COUNT];
 SMouseEvent g_mouseEvent;
@@ -56,9 +57,9 @@ void init( void )
     g_Console.setMouseHandler(mouseHandler);
     for (int i = 0; i < 4; i++)
     {
-        g_sGhost[i].m_cLocation.X = (rand() % 68);
-        g_sGhost[i].m_cLocation.Y = (rand() % 22);
-        g_sGhost[i].m_bActive = true;
+            g_sGhost[i].m_cLocation.X = (rand() % 68);
+            g_sGhost[i].m_cLocation.Y = (rand() % 22);
+            g_sGhost[i].m_bActive = false;
     }
 }
 
@@ -319,7 +320,7 @@ void render()
     }
     renderFramerate();      // renders debug information, frame rate, elapsed time, etc
     renderInputEvents();    // renders status of input events
-    renderbiscuit();
+    //renderbiscuit();
     renderToScreen();       // dump the contents of the buffer to the screen, one frame worth of game
    
 
@@ -355,7 +356,7 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();// renders the character into the buffer
-    renderbiscuit();
+    //renderbiscuit();
     renderGhost();
 }
 
@@ -439,17 +440,17 @@ void renderInputEvents()
 
 }
 
-void renderbiscuit()
-{
-  
-    WORD charColor = 2;
-    if (g_sChar.m_bActive)
-    {
-        charColor = 1;
-    }
-     g_Console.writeToBuffer(, 'z', 55 );
-
-}
+//void renderbiscuit()
+//{
+//  
+//    WORD charColor = 2;
+//    if (g_sChar.m_bActive)
+//    {
+//        charColor = 1;
+//    }
+//     g_Console.writeToBuffer(, 'z', 55 );
+//
+//}
 
 void UpdateGhost()
 {
@@ -461,17 +462,12 @@ void UpdateGhost()
             g_eGameState = S_LOSE;
         }
     }
-
-    
-    
-        
-    
 }
 
 
 void ghostMovement()
 {
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
         EnemyUpdateRate += g_dDeltaTime;
         int random = rand() % 8 + 1;
@@ -481,34 +477,94 @@ void ghostMovement()
         case 1:
             if (g_sGhost[i].m_cLocation.X < g_Console.getConsoleSize().X - 1 && EnemyUpdateRate > 0.4)
             {
-                g_sGhost[i].m_cLocation.X++;
-                EnemyUpdateRate = 0;
+                if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X + 1][g_sGhost[i].m_cLocation.Y] != W)
+                {
+                    g_sGhost[i].m_cLocation.X++;
+                    EnemyUpdateRate = 0;
+                }
             }
             break;
         case 2:
             if (g_sGhost[i].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && EnemyUpdateRate > 0.4)
             {
-                g_sGhost[i].m_cLocation.Y++;
-                EnemyUpdateRate = 0;
+                if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y + 1] != W)
+                {
+                    g_sGhost[i].m_cLocation.Y++;
+                    EnemyUpdateRate = 0;
+                }
             }
             break;
         case 3:
             if (g_sGhost[i].m_cLocation.X > 0 && EnemyUpdateRate > 0.4)
             {
-                g_sGhost[i].m_cLocation.X--;
-                EnemyUpdateRate = 0;
+                if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X - 1][g_sGhost[i].m_cLocation.Y] != W)
+                {
+                    g_sGhost[i].m_cLocation.X--;
+                    EnemyUpdateRate = 0;
+                }
             }
             break;
         case 4:
             if (g_sGhost[i].m_cLocation.Y > 0 && EnemyUpdateRate > 0.4)
             {
-                g_sGhost[i].m_cLocation.Y--;
-                EnemyUpdateRate = 0;
+                if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y - 1] != W)
+                {
+                    g_sGhost[i].m_cLocation.Y--;
+                    EnemyUpdateRate = 0;
+                }
             }
             break;
 
         }
 
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        EnemyUpdateRate2 += g_dDeltaTime;
+        int random = rand() % 8 + 1;
+        switch (random)
+        {
+        case 1:
+            if (g_sGhost[3].m_cLocation.X >= g_sChar.m_cLocation.X && EnemyUpdateRate2 > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X - 1][g_sGhost[3].m_cLocation.Y] != W)
+                {
+                    g_sGhost[3].m_cLocation.X -= 1;
+                    EnemyUpdateRate2 = 0;
+                }
+            }
+            break;
+        case 2:
+            if (g_sGhost[3].m_cLocation.Y >= g_sChar.m_cLocation.Y && EnemyUpdateRate2 > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y - 1] != W)
+                {
+                    g_sGhost[3].m_cLocation.Y -= 1;
+                    EnemyUpdateRate2 = 0;
+                }
+            }
+            break;
+        case 3:
+            if (g_sGhost[3].m_cLocation.X <= g_sChar.m_cLocation.X && EnemyUpdateRate2 > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X + 1][g_sGhost[3].m_cLocation.Y] != W)
+                {
+                    g_sGhost[3].m_cLocation.X += 1;
+                    EnemyUpdateRate2 = 0;
+                }
+            }
+            break;
+        case 4:
+            if (g_sGhost[3].m_cLocation.Y <= g_sChar.m_cLocation.Y && EnemyUpdateRate2 > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y + 1] != W)
+                {
+                    g_sGhost[3].m_cLocation.Y += 1;
+                    EnemyUpdateRate2 = 0;
+                }
+            }
+            break;      
+        }
     }
 }
 
@@ -517,9 +573,28 @@ void renderGhost()
 
     for (int i = 0; i < 4; i++)
     {
-        //if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y] != W)
-        //{
-        g_Console.writeToBuffer(g_sGhost[i].m_cLocation, (char)31, 7);
-        //}
+        if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y] != W)
+        {
+            if (g_dElapsedTime > 1)
+            {
+                g_Console.writeToBuffer(g_sGhost[0].m_cLocation, (char)31, 7);
+                g_sGhost[0].m_bActive = true;
+            }
+            if (g_dElapsedTime > 3)
+            {
+                g_Console.writeToBuffer(g_sGhost[1].m_cLocation, (char)31, 7);
+                g_sGhost[1].m_bActive = true;
+            }
+            if (g_dElapsedTime > 5)
+            {
+                g_Console.writeToBuffer(g_sGhost[2].m_cLocation, (char)31, 7);
+                g_sGhost[2].m_bActive = true;
+            }
+            if (g_dElapsedTime > 7)
+            {
+                g_Console.writeToBuffer(g_sGhost[3].m_cLocation, (char)31, 7);
+                g_sGhost[3].m_bActive = true;
+            }
+        }
     }
 }
