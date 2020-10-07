@@ -27,6 +27,7 @@ SGameChar   g_sChar;
 SGameChar  g_sGhost[4];
 SGameChar   g_biscuit[10];
 int score;
+int bcount;
 EGAMESTATES g_eGameState = S_MENU; // initial state
 Map g_sMap;
 
@@ -57,6 +58,10 @@ void init( void )
     // remember to set your keyboard handler, so that your functions can be notified of input events
     g_Console.setKeyboardHandler(keyboardHandler);
     g_Console.setMouseHandler(mouseHandler);
+
+    /* initialize random seed: */
+    srand(time(NULL));
+
     for (int i = 0; i < 4; i++)
     {
             g_sGhost[i].m_cLocation.X = (rand() % 68);
@@ -66,11 +71,17 @@ void init( void )
 
     for (int i = 0; i < 10; i++)
     {
-        g_biscuit[i].m_cLocation.X = rand() % 75;
-        g_biscuit[i].m_cLocation.Y = rand() % 22;
+        do {
+            g_biscuit[i].m_cLocation.X = rand() % 80;
+            g_biscuit[i].m_cLocation.Y = rand() % 25;
+        } while (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] == W);
         g_biscuit[i].m_bActive = true;
 
-    }
+    } 
+
+
+
+
 }
 
 //--------------------------------------------------------------
@@ -131,6 +142,7 @@ void keyboardHandler(const KEY_EVENT_RECORD& keyboardEvent)
         break;
     case S_LOSE: gameplayKBHandler(keyboardEvent);
         break;
+    case S_WIN : gameplayKBHandler(keyboardEvent);
     }
 }
 
@@ -244,6 +256,7 @@ void update(double dt)
             break;
         case S_LOSE: updateLoseScreen();
             break;
+        case S_WIN: updatewinscreen();
     }
 }
 
@@ -263,6 +276,7 @@ void updateGame()       // gameplay logic
     ghostMovement();
     updatebiscuit();
     updateLoseScreen();
+    updatewinscreen();
 }
 
 
@@ -337,6 +351,7 @@ void render()
         break;
     case S_RESTART: init();
         break;
+    case S_WIN: renderwinscreen();
     }
     renderFramerate();      // renders debug information, frame rate, elapsed time, etc
     renderInputEvents();    // renders status of input event
@@ -472,16 +487,19 @@ void renderbiscuit()
     WORD charColor = 2;
     for (int i = 0; i < 10; i++) 
     {
-        
-        
-            if (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] != W && g_biscuit[i].m_bActive == true )
+          
+            //if (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] != W & g_biscuit.)
+        if (g_biscuit[i].m_bActive)
             {
                 charColor = 1;
 
                 g_Console.writeToBuffer(g_biscuit[i].m_cLocation, 'z', 55);
             }
-        
+
+
     }
+
+
 }
 
 void updatebiscuit()
@@ -493,7 +511,16 @@ void updatebiscuit()
             g_biscuit[i].m_bActive = false;
             score += 1;
         }
+
+        if (score == 10)
+        {
+            g_eGameState = S_WIN;
+        }
     }
+   
+
+    
+
 }
 
 void UpdateGhost()
@@ -652,14 +679,14 @@ void renderlosescreen()
 
     COORD c = g_Console.getConsoleSize();
     c.Y /= 3;
-    c.X = c.X / 2 - 9;
+    c.X = c.X / 2 - 7;
     g_Console.writeToBuffer(c, "YOUR SCORE IS", 0x09);
     c.Y += 1;
     c.X = g_Console.getConsoleSize().X / 2;
     g_Console.writeToBuffer(c, ss.str(), 0x09);
     c.Y += 1;
-    c.X = g_Console.getConsoleSize().X / 2 - 12;
-    g_Console.writeToBuffer(c, "Press 'Esc' to quit and 'spacebar' to retry", 0x09);
+    c.X = g_Console.getConsoleSize().X / 2 - 20;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit and 'Spacebar' to retry", 0x09);
 
 
 }
@@ -676,7 +703,35 @@ void updateLoseScreen()
     if (g_skKeyEvent[K_SPACE].keyReleased)
     {
         g_eGameState = EGAMESTATES::S_RESTART;
+        score = 0;
     }
 }
 
-    
+void renderwinscreen()
+{
+    COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 3;
+    g_Console.writeToBuffer(c, "YOU WIN", 0x03);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 10;
+    g_Console.writeToBuffer(c, "Press 'Spacebar' to retry", 0x09);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 5;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+
+}
+
+void updatewinscreen()
+{
+    if (g_skKeyEvent[K_ESCAPE].keyReleased)
+    {
+        g_bQuitGame = true;
+    }
+
+    if (g_skKeyEvent[K_SPACE].keyReleased)
+    {
+        g_eGameState = EGAMESTATES::S_RESTART;
+        score = 0;
+    }
+}

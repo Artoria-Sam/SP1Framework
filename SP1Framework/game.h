@@ -76,6 +76,7 @@ void processUserInput();    // checks if you should change states or do somethin
 void clearScreen();         // clears the current screen and draw from scratch 
 void renderSplashScreen();  // renders the splash screen
 void renderlosescreen();
+void renderwinscreen();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
@@ -88,6 +89,7 @@ void UpdateGhost();
 void ghostMovement();
 void renderGhost();
 void updateLoseScreen();
+void updatewinscreen();
 
 
 // keyboard and mouse input event managers
