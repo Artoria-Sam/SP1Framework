@@ -5,7 +5,7 @@
 
 extern CStopWatch g_swTimer;
 extern bool g_bQuitGame;
-extern char bicuits[5];
+
 
 // struct to store keyboard events
 // a small subset of KEY_EVENT_RECORD
@@ -43,7 +43,7 @@ enum EGAMESTATES
     S_GAME,
     S_WIN,
     S_LOSE,
-    S_GAME2,
+    S_RESTART,
     S_COUNT
 };
 
@@ -79,16 +79,20 @@ void moveCharacter();       // moves the character, collision detection, physics
 void processUserInput();    // checks if you should change states or do something else with the game, e.g. pause, exit
 void clearScreen();         // clears the current screen and draw from scratch 
 void renderSplashScreen();  // renders the splash screen
+void renderlosescreen();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 void renderInputEvents();   // renders the status of input events
-//void renderbiscuit(); 
+void renderbiscuit(); 
+void updatebiscuit();
 void UpdateGhost();
 void ghostMovement();
 void renderGhost();
+void updateLoseScreen();
+
 
 // keyboard and mouse input event managers
 void keyboardHandler(const KEY_EVENT_RECORD& keyboardEvent);  // define this function for the console to call when there are keyboard events
