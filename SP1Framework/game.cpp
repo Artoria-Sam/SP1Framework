@@ -25,6 +25,7 @@ SMouseEvent g_mouseEvent;
 // Game specific variables here
 SGameChar   g_sChar;
 SGameChar  g_sGhost[4];
+SGameChar   g_biscuit[10];
 EGAMESTATES g_eGameState = S_MENU; // initial state
 Map g_sMap;
 
@@ -60,6 +61,14 @@ void init( void )
             g_sGhost[i].m_cLocation.X = (rand() % 68);
             g_sGhost[i].m_cLocation.Y = (rand() % 22);
             g_sGhost[i].m_bActive = false;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        g_biscuit[i].m_cLocation.X = rand() % 75;
+        g_biscuit[i].m_cLocation.Y = rand() % 22;
+        g_biscuit[i].m_bActive = true;
+
     }
 }
 
@@ -247,6 +256,7 @@ void updateGame()       // gameplay logic
                         // sound can be played here too.
     UpdateGhost();
     ghostMovement();
+    updatebiscuit();
 }
 
 
@@ -319,8 +329,7 @@ void render()
         break;
     }
     renderFramerate();      // renders debug information, frame rate, elapsed time, etc
-    renderInputEvents();    // renders status of input events
-    //renderbiscuit();
+    renderInputEvents();    // renders status of input event
     renderToScreen();       // dump the contents of the buffer to the screen, one frame worth of game
    
 
@@ -356,7 +365,7 @@ void renderGame()
 {
     renderMap();        // renders the map to the buffer first
     renderCharacter();// renders the character into the buffer
-    //renderbiscuit();
+    renderbiscuit();
     renderGhost();
 }
 
@@ -439,18 +448,34 @@ void renderInputEvents()
     }
 
 }
+void renderbiscuit()
+{
+  
+    WORD charColor = 2;
+    for (int i = 0; i < 10; i++) 
+    {
+        
+        
+            if (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] != W && g_biscuit[i].m_bActive == true )
+            {
+                charColor = 1;
 
-//void renderbiscuit()
-//{
-//  
-//    WORD charColor = 2;
-//    if (g_sChar.m_bActive)
-//    {
-//        charColor = 1;
-//    }
-//     g_Console.writeToBuffer(, 'z', 55 );
-//
-//}
+                g_Console.writeToBuffer(g_biscuit[i].m_cLocation, 'z', 55);
+            }
+        
+    }
+}
+
+void updatebiscuit()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (g_biscuit[i].m_bActive && g_biscuit[i].m_cLocation.X == g_sChar.m_cLocation.X && g_biscuit[i].m_cLocation.Y == g_sChar.m_cLocation.Y)
+        {
+            g_biscuit[i].m_bActive = false;
+        }
+    }
+}
 
 void UpdateGhost()
 {
@@ -598,3 +623,7 @@ void renderGhost()
         }
     }
 }
+
+
+
+
