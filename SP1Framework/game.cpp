@@ -128,6 +128,8 @@ void keyboardHandler(const KEY_EVENT_RECORD& keyboardEvent)
    
     case S_GAME: gameplayKBHandler(keyboardEvent); // handle gameplay keyboard event 
         break;
+    case S_LOSE: gameplayKBHandler(keyboardEvent);
+        break;
     }
 }
 
@@ -239,6 +241,8 @@ void update(double dt)
             break;
         case S_GAME: updateGame(); // gameplay logic when we are in the game
             break;
+        case S_LOSE: updateLoseScreen();
+            break;
     }
 }
 
@@ -257,6 +261,7 @@ void updateGame()       // gameplay logic
     UpdateGhost();
     ghostMovement();
     updatebiscuit();
+    updateLoseScreen();
 }
 
 
@@ -326,6 +331,10 @@ void render()
     case S_MENU: renderSplashScreen();
         break;
     case S_GAME: renderGame();
+        break;
+    case S_LOSE: renderlosescreen();
+        break;
+    case S_RESTART: init();
         break;
     }
     renderFramerate();      // renders debug information, frame rate, elapsed time, etc
@@ -592,7 +601,7 @@ void ghostMovement()
         }
     }
 }
-
+ 
 void renderGhost()
 {
 
@@ -624,6 +633,35 @@ void renderGhost()
     }
 }
 
+void renderlosescreen()
+{
+    COORD c = g_Console.getConsoleSize();
+    c.Y /= 3;
+    c.X = c.X / 2 - 9;
+    g_Console.writeToBuffer(c, "YOU ARE DEAD", 0x03);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 9;
+    g_Console.writeToBuffer(c, "Press 'Spacebar' to retry", 0x09);
+    c.Y += 1;
+    c.X = g_Console.getConsoleSize().X / 2 - 9;
+    g_Console.writeToBuffer(c, "Press 'Esc' to quit", 0x09);
+
+
+}
 
 
 
+void updateLoseScreen()
+{
+    if (g_skKeyEvent[K_ESCAPE].keyReleased)
+    {
+        g_bQuitGame = true;
+    }
+
+    if (g_skKeyEvent[K_SPACE].keyReleased)
+    {
+        g_eGameState = EGAMESTATES::S_RESTART;
+    }
+}
+
+    
