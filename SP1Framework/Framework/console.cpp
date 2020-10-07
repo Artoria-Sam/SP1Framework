@@ -290,6 +290,8 @@ void Console::writeToBuffer(COORD c, char ch, WORD attribute)
     writeToBuffer(c.X, c.Y, ch, attribute);
 }
 
+
+
 void Console::writeToConsole(const CHAR_INFO* lpBuffer)
 {	
     // WriteConsoleOutputA for ASCII text
