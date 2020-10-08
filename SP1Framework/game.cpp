@@ -19,6 +19,7 @@ double  g_dDeltaTime;
 double EnemyUpdateRate = 0.0;
 double EnemyUpdateRate2 = 0.0;
 double EnemyUpdateRate3 = 0.0;
+double EnemyUpdateRate4 = 0.0;
 
 
 SKeyEvent g_skKeyEvent[K_COUNT];
@@ -63,7 +64,8 @@ void init( void )
     {
             g_sGhost[i].m_cLocation.X = 37;
             g_sGhost[i].m_cLocation.Y = 13;
-            g_sGhost[i].m_bActive = false;
+            g_sGhost[i].m_bActive = true;
+            g_sGhost[i].m_state = 0;
     }
 
     for (int i = 0; i < 10; i++)
@@ -73,6 +75,49 @@ void init( void )
         g_biscuit[i].m_bActive = true;
 
     }
+
+    for (int i = 0; i < 4; i++)
+    {
+
+        g_sGhost[i].m_eWaypoints[0].X = 42;
+        g_sGhost[i].m_eWaypoints[0].Y = 13;
+        g_sGhost[i].m_eWaypoints[1].X = 42;
+        g_sGhost[i].m_eWaypoints[1].Y = 11;
+        g_sGhost[i].m_eWaypoints[2].X = 37;
+        g_sGhost[i].m_eWaypoints[2].Y = 11;
+        g_sGhost[i].m_eWaypoints[3].X = 37;
+        g_sGhost[i].m_eWaypoints[3].Y = 13;
+    }
+
+    // 0 x-, 1 y+, 2 x+, 3 y-, 4 x+, 5 y+, 6 x+, 7 y+, 8 x-, 9 y-, 10 x+, 11 y+, 12 x+, 4, 3, 13, 0
+    g_sGhost[2].m_dWaypoints[0].X = 33;
+    g_sGhost[2].m_dWaypoints[0].Y = 9;
+    g_sGhost[2].m_dWaypoints[1].X = 33;
+    g_sGhost[2].m_dWaypoints[1].Y = 15;
+    g_sGhost[2].m_dWaypoints[2].X = 46;
+    g_sGhost[2].m_dWaypoints[2].Y = 15;
+    g_sGhost[2].m_dWaypoints[3].X = 46;
+    g_sGhost[2].m_dWaypoints[3].Y = 12;
+    g_sGhost[2].m_dWaypoints[4].X = 50;
+    g_sGhost[2].m_dWaypoints[4].Y = 12;
+    g_sGhost[2].m_dWaypoints[5].X = 50;
+    g_sGhost[2].m_dWaypoints[5].Y = 15;
+    g_sGhost[2].m_dWaypoints[6].X = 54;
+    g_sGhost[2].m_dWaypoints[6].Y = 15;
+    g_sGhost[2].m_dWaypoints[7].X = 54;
+    g_sGhost[2].m_dWaypoints[7].Y = 23;
+    g_sGhost[2].m_dWaypoints[8].X = 25;
+    g_sGhost[2].m_dWaypoints[8].Y = 23;
+    g_sGhost[2].m_dWaypoints[9].X = 25;
+    g_sGhost[2].m_dWaypoints[9].Y = 1;
+    g_sGhost[2].m_dWaypoints[10].X = 54;
+    g_sGhost[2].m_dWaypoints[10].Y = 1;
+    g_sGhost[2].m_dWaypoints[11].X = 54;
+    g_sGhost[2].m_dWaypoints[11].Y = 9;
+    g_sGhost[2].m_dWaypoints[12].X = 50;
+    g_sGhost[2].m_dWaypoints[12].Y = 9;
+    g_sGhost[2].m_dWaypoints[13].X = 46;
+    g_sGhost[2].m_dWaypoints[13].Y = 9;
 }
 
 //--------------------------------------------------------------
@@ -547,42 +592,23 @@ void UpdateGhost()
             g_eGameState = S_LOSE;
         }
     }
+
     for (int i = 0; i < 4; i++)
     {
-        
-        g_sGhost[i].m_eWaypoints[0].X = 42;
-        g_sGhost[i].m_eWaypoints[0].Y = 13;
-        g_sGhost[i].m_eWaypoints[1].X = 42;
-        g_sGhost[i].m_eWaypoints[1].Y = 11;
-        g_sGhost[i].m_eWaypoints[2].X = 37;
-        g_sGhost[i].m_eWaypoints[2].Y = 11;
-        g_sGhost[i].m_eWaypoints[3].X = 37;
-        g_sGhost[i].m_eWaypoints[3].Y = 13;
-    }
-
-
-    g_sGhost[1].m_dWaypoints[0].X = 5;
-    g_sGhost[1].m_dWaypoints[0].Y = 6;
-}
-
-
-void ghostMovement()
-{
-    for (int i = 0; i < 4; i++)
-    {
-        if (g_sGhost[i].m_bActive == false)
+        if (g_sGhost[i].m_state == 0)
         {
-            EnemyUpdateRate3 += g_dDeltaTime;
+            g_sGhost[i].EnemyUpdateRate2 += g_dDeltaTime;
+            //EnemyUpdateRate3 += g_dDeltaTime;
             if (g_sGhost[i].m_fDirection == 0)
             {
                 if (g_sGhost[i].m_cLocation.X == g_sGhost[i].m_eWaypoints[0].X && g_sGhost[i].m_cLocation.Y == g_sGhost[i].m_eWaypoints[0].Y)
                 {
                     g_sGhost[i].m_fDirection = 1;
                 }
-                else if (EnemyUpdateRate3 > 0.4)
+                else if (g_sGhost[i].EnemyUpdateRate > 0.4)
                 {
                     g_sGhost[i].m_cLocation.X++;
-                    EnemyUpdateRate3 = 0;
+                    g_sGhost[i].EnemyUpdateRate2 = 0;
                 }
             }
             if (g_sGhost[i].m_fDirection == 1)
@@ -591,10 +617,10 @@ void ghostMovement()
                 {
                     g_sGhost[i].m_fDirection = 2;
                 }
-                else if (EnemyUpdateRate3 > 0.4)
+                else if (g_sGhost[i].EnemyUpdateRate > 0.4)
                 {
                     g_sGhost[i].m_cLocation.Y--;
-                    EnemyUpdateRate3 = 0;
+                    g_sGhost[i].EnemyUpdateRate2 = 0;
                 }
             }
             if (g_sGhost[i].m_fDirection == 2)
@@ -603,10 +629,10 @@ void ghostMovement()
                 {
                     g_sGhost[i].m_fDirection = 3;
                 }
-                else if (EnemyUpdateRate3 > 0.4)
+                else if (g_sGhost[i].EnemyUpdateRate > 0.4)
                 {
                     g_sGhost[i].m_cLocation.X--;
-                    EnemyUpdateRate3 = 0;
+                    g_sGhost[i].EnemyUpdateRate2 = 0;
                 }
             }
             if (g_sGhost[i].m_fDirection == 3)
@@ -615,156 +641,412 @@ void ghostMovement()
                 {
                     g_sGhost[i].m_fDirection = 0;
                 }
-                else if (EnemyUpdateRate3 > 0.4)
+                else if (g_sGhost[i].EnemyUpdateRate > 0.4)
                 {
                     g_sGhost[i].m_cLocation.Y++;
-                    EnemyUpdateRate3 = 0;
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 3; i++)
-            EnemyUpdateRate += g_dDeltaTime;
-            int random = rand() % 8 + 1;
-            switch (random)
-            {
-
-            case 1:
-                if (g_sGhost[i].m_cLocation.X < g_Console.getConsoleSize().X - 1 && EnemyUpdateRate > 0.4)
-                {
-                    if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X + 1][g_sGhost[i].m_cLocation.Y] != W)
-                    {
-                        g_sGhost[i].m_cLocation.X++;
-                        EnemyUpdateRate = 0;
-                    }
-                }
-                break;
-            case 2:
-                if (g_sGhost[i].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && EnemyUpdateRate > 0.4)
-                {
-                    if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y + 1] != W)
-                    {
-                        if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y + 1] != D)
-                        {
-                            g_sGhost[i].m_cLocation.Y++;
-                            EnemyUpdateRate = 0;
-                        }
-                    }
-                }
-                break;
-            case 3:
-                if (g_sGhost[i].m_cLocation.X > 0 && EnemyUpdateRate > 0.4)
-                {
-                    if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X - 1][g_sGhost[i].m_cLocation.Y] != W)
-                    {
-                        g_sGhost[i].m_cLocation.X--;
-                        EnemyUpdateRate = 0;
-                    }
-                }
-                break;
-            case 4:
-                if (g_sGhost[i].m_cLocation.Y > 0 && EnemyUpdateRate > 0.4)
-                {
-                    if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y - 1] != W)
-                    {
-                        g_sGhost[i].m_cLocation.Y--;
-                        EnemyUpdateRate = 0;
-                    }
-                }
-                break;
-
-            }
-
-
-            for (int i = 0; i < 4; i++)
-            {
-                EnemyUpdateRate2 += g_dDeltaTime;
-                int random = rand() % 8 + 1;
-                switch (random)
-                {
-                case 1:
-                    if (g_sGhost[3].m_cLocation.X >= g_sChar.m_cLocation.X && EnemyUpdateRate2 > 1)
-                    {
-                        if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X - 1][g_sGhost[3].m_cLocation.Y] != W)
-                        {
-                            g_sGhost[3].m_cLocation.X -= 1;
-                            EnemyUpdateRate2 = 0;
-                        }
-                    }
-                    break;
-                case 2:
-                    if (g_sGhost[3].m_cLocation.Y >= g_sChar.m_cLocation.Y && EnemyUpdateRate2 > 1)
-                    {
-                        if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y - 1] != W)
-                        {
-                            g_sGhost[3].m_cLocation.Y -= 1;
-                            EnemyUpdateRate2 = 0;
-                        }
-                    }
-                    break;
-                case 3:
-                    if (g_sGhost[3].m_cLocation.X <= g_sChar.m_cLocation.X && EnemyUpdateRate2 > 1)
-                    {
-                        if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X + 1][g_sGhost[3].m_cLocation.Y] != W)
-                        {
-                            g_sGhost[3].m_cLocation.X += 1;
-                            EnemyUpdateRate2 = 0;
-                        }
-                    }
-                    break;
-                case 4:
-                    if (g_sGhost[3].m_cLocation.Y <= g_sChar.m_cLocation.Y && EnemyUpdateRate2 > 1)
-                    {
-                        if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y + 1] != W)
-                        {
-                            if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y + 1] != D)
-                            {
-                                g_sGhost[3].m_cLocation.Y += 1;
-                                EnemyUpdateRate2 = 0;
-                            }
-                        }
-                    }
-                    break;
+                    g_sGhost[i].EnemyUpdateRate2 = 0;
                 }
             }
         }
     }
+   
+    for (int i = 0; i < 4; i++)
+    {
+        g_sGhost[i].RenderUpdateTimer += g_dDeltaTime;
+    }
+    if (g_dElapsedTime > 1 && g_sGhost[0].m_state == 0)
+    {
+        g_sGhost[0].m_state = 2;
+    }
+		if (g_sGhost[0].m_state == 2)
+		{
+			if (g_sGhost[0].m_cLocation.X == 39 && g_sGhost[0].m_cLocation.Y == 9)
+			{
+				g_sGhost[0].m_state = 1;
+			}
+			if (g_sGhost[0].RenderUpdateTimer > 0.4)
+			{
+				if (g_sGhost[0].m_cLocation.X >= 40)
+				{
+					if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X - 1][g_sGhost[0].m_cLocation.Y] != W)
+					{
+						g_sGhost[0].m_cLocation.X -= 1;
+						g_sGhost[0].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[0].m_cLocation.X <= 38)
+				{
+					if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X + 1][g_sGhost[0].m_cLocation.Y] != W)
+					{
+						g_sGhost[0].m_cLocation.X += 1;
+						g_sGhost[0].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[0].m_cLocation.Y >= 8)
+				{
+					if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X][g_sGhost[0].m_cLocation.Y - 1] != W)
+					{
+						g_sGhost[0].m_cLocation.Y -= 1;
+						g_sGhost[0].RenderUpdateTimer = 0;
+					}
+				}
+			}
+		}
+    if (g_dElapsedTime > 3 && g_sGhost[1].m_state == 0)
+    {
+        g_sGhost[1].m_state = 2;
+    }
+		if (g_sGhost[1].m_state == 2)
+		{
+			if (g_sGhost[1].m_cLocation.X == 39 && g_sGhost[1].m_cLocation.Y == 9)
+			{
+				g_sGhost[1].m_state = 1;
+			}
+			if (g_sGhost[1].RenderUpdateTimer > 0.4)
+			{
+				if (g_sGhost[1].m_cLocation.X >= 40)
+				{
+					if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X - 1][g_sGhost[1].m_cLocation.Y] != W)
+					{
+						g_sGhost[1].m_cLocation.X -= 1;
+						g_sGhost[1].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[1].m_cLocation.X <= 38)
+				{
+					if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X + 1][g_sGhost[1].m_cLocation.Y] != W)
+					{
+						g_sGhost[1].m_cLocation.X += 1;
+						g_sGhost[1].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[1].m_cLocation.Y >= 8)
+				{
+					if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X][g_sGhost[1].m_cLocation.Y - 1] != W)
+					{
+						g_sGhost[1].m_cLocation.Y -= 1;
+						g_sGhost[1].RenderUpdateTimer = 0;
+					}
+				}
+			}
+		}
+    if (g_dElapsedTime > 5 && g_sGhost[2].m_state == 0)
+    {
+        g_sGhost[2].m_state = 2;
+    }
+		if (g_sGhost[2].m_state == 2)
+		{
+			if (g_sGhost[2].m_cLocation.X == 39 && g_sGhost[2].m_cLocation.Y == 9)
+			{
+				g_sGhost[2].m_state = 1;
+			}
+			if (g_sGhost[2].RenderUpdateTimer > 0.4)
+			{
+				if (g_sGhost[2].m_cLocation.X >= 40)
+				{
+					if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X - 1][g_sGhost[2].m_cLocation.Y] != W)
+					{
+						g_sGhost[2].m_cLocation.X -= 1;
+						g_sGhost[2].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[2].m_cLocation.X <= 38)
+				{
+					if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X + 1][g_sGhost[2].m_cLocation.Y] != W)
+					{
+						g_sGhost[2].m_cLocation.X += 1;
+						g_sGhost[2].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[2].m_cLocation.Y >= 8)
+				{
+					if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y - 1] != W)
+					{
+						g_sGhost[2].m_cLocation.Y -= 1;
+						g_sGhost[2].RenderUpdateTimer = 0;
+					}
+				}
+			}
+		}
+    if (g_dElapsedTime > 7 && g_sGhost[3].m_state == 0)
+    {
+        g_sGhost[3].m_state = 2;
+    }
+		if (g_sGhost[3].m_state == 2)
+		{
+			if (g_sGhost[3].m_cLocation.X == 39 && g_sGhost[3].m_cLocation.Y == 9)
+			{
+				g_sGhost[3].m_state = 1;
+			}
+			if (g_sGhost[3].RenderUpdateTimer > 0.4)
+			{
+				if (g_sGhost[3].m_cLocation.X >= 40)
+				{
+					if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X - 1][g_sGhost[3].m_cLocation.Y] != W)
+					{
+						g_sGhost[3].m_cLocation.X -= 1;
+						g_sGhost[3].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[3].m_cLocation.X <= 38)
+				{
+					if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X + 1][g_sGhost[3].m_cLocation.Y] != W)
+					{
+						g_sGhost[3].m_cLocation.X += 1;
+						g_sGhost[3].RenderUpdateTimer = 0;
+					}
+				}
+				else if (g_sGhost[3].m_cLocation.Y >= 8)
+				{
+					if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y - 1] != W)
+					{
+						g_sGhost[3].m_cLocation.Y -= 1;
+						g_sGhost[3].RenderUpdateTimer = 0;
+					}
+				}
+			}
+		}
+}
+
+
+void ghostMovement()
+{
+    if (g_sGhost[0].m_state == 1)
+    {
+        g_sGhost[0].EnemyUpdateRate += g_dDeltaTime;
+        int random = rand() % 8 + 1;
+        switch (random)
+        {
+
+        case 1:
+            if (g_sGhost[0].m_cLocation.X < g_Console.getConsoleSize().X - 1 && g_sGhost[0].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X + 1][g_sGhost[0].m_cLocation.Y] != W)
+                {
+                    g_sGhost[0].m_cLocation.X++;
+                    g_sGhost[0].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 2:
+            if (g_sGhost[0].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && g_sGhost[0].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X][g_sGhost[0].m_cLocation.Y + 1] != W)
+                {
+                    if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X][g_sGhost[0].m_cLocation.Y + 1] != D)
+                    {
+                        g_sGhost[0].m_cLocation.Y++;
+                        g_sGhost[0].EnemyUpdateRate = 0;
+                    }
+                }
+            }
+            break;
+        case 3:
+            if (g_sGhost[0].m_cLocation.X > 0 && g_sGhost[0].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X - 1][g_sGhost[0].m_cLocation.Y] != W)
+                {
+                    g_sGhost[0].m_cLocation.X--;
+                    g_sGhost[0].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 4:
+            if (g_sGhost[0].m_cLocation.Y > 0 && g_sGhost[0].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[0].m_cLocation.X][g_sGhost[0].m_cLocation.Y - 1] != W)
+                {
+                    g_sGhost[0].m_cLocation.Y--;
+                    g_sGhost[0].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+
+        }
+    }
+    if (g_sGhost[1].m_state == 1)
+    {
+        g_sGhost[1].EnemyUpdateRate += g_dDeltaTime;
+        int random1 = rand() % 8 + 1;
+        switch (random1)
+        {
+
+        case 1:
+            if (g_sGhost[1].m_cLocation.X < g_Console.getConsoleSize().X - 1 && g_sGhost[1].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X + 1][g_sGhost[1].m_cLocation.Y] != W)
+                {
+                    g_sGhost[1].m_cLocation.X++;
+                    g_sGhost[1].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 2:
+            if (g_sGhost[1].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && g_sGhost[1].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X][g_sGhost[1].m_cLocation.Y + 1] != W)
+                {
+                    if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X][g_sGhost[1].m_cLocation.Y + 1] != D)
+                    {
+                        g_sGhost[1].m_cLocation.Y++;
+                        g_sGhost[1].EnemyUpdateRate = 0;
+                    }
+                }
+            }
+            break;
+        case 3:
+            if (g_sGhost[1].m_cLocation.X > 0 && g_sGhost[1].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X - 1][g_sGhost[1].m_cLocation.Y] != W)
+                {
+                    g_sGhost[1].m_cLocation.X--;
+                    g_sGhost[1].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 4:
+            if (g_sGhost[1].m_cLocation.Y > 0 && g_sGhost[1].EnemyUpdateRate > 0.4)
+            {
+                if (g_sMap.mapArray[g_sGhost[1].m_cLocation.X][g_sGhost[1].m_cLocation.Y - 1] != W)
+                {
+                    g_sGhost[1].m_cLocation.Y--;
+                    g_sGhost[1].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        }
+    }
+    if (g_sGhost[2].m_state == 1)
+    {
+        g_sGhost[2].EnemyUpdateRate += g_dDeltaTime;
+        if (g_sGhost[2].m_gDirection == 0)
+        {
+            if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[0].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[0].Y)
+            {
+                g_sGhost[2].m_gDirection = 1;
+            }
+            else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+            {
+                g_sGhost[2].m_cLocation.X--;
+                g_sGhost[2].EnemyUpdateRate = 0;
+            }
+        }
+
+
+        //int random2 = rand() % 8 + 1;
+        //switch (random2)
+        //{
+
+        //case 1:
+        //    if (g_sGhost[2].m_cLocation.X < g_Console.getConsoleSize().X - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
+        //    {
+        //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X + 1][g_sGhost[2].m_cLocation.Y] != W)
+        //        {
+        //            g_sGhost[2].m_cLocation.X++;
+        //            g_sGhost[2].EnemyUpdateRate = 0;
+        //        }
+        //    }
+        //    break;
+        //case 2:
+        //    if (g_sGhost[2].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
+        //    {
+        //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != W)
+        //        {
+        //            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != D)
+        //            {
+        //                g_sGhost[2].m_cLocation.Y++;
+        //                g_sGhost[2].EnemyUpdateRate = 0;
+        //            }
+        //        }
+        //    }
+        //    break;
+        //case 3:
+        //    if (g_sGhost[2].m_cLocation.X > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
+        //    {
+        //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X - 1][g_sGhost[2].m_cLocation.Y] != W)
+        //        {
+        //            g_sGhost[2].m_cLocation.X--;
+        //            g_sGhost[2].EnemyUpdateRate = 0;
+        //        }
+        //    }
+        //    break;
+        //case 4:
+        //    if (g_sGhost[2].m_cLocation.Y > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
+        //    {
+        //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y - 1] != W)
+        //        {
+        //            g_sGhost[2].m_cLocation.Y--;
+        //            g_sGhost[2].EnemyUpdateRate = 0;
+        //        }
+        //    }
+        //    break;
+
+        //}
+    }
+    if (g_sGhost[3].m_state == 1)
+    {
+        g_sGhost[3].EnemyUpdateRate += g_dDeltaTime;
+        int random3 = rand() % 8 + 1;
+        switch (random3)
+        {
+        case 1:
+            if (g_sGhost[3].m_cLocation.X >= g_sChar.m_cLocation.X && g_sGhost[3].EnemyUpdateRate > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X - 1][g_sGhost[3].m_cLocation.Y] != W)
+                {
+                    g_sGhost[3].m_cLocation.X -= 1;
+                    g_sGhost[3].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 2:
+            if (g_sGhost[3].m_cLocation.Y >= g_sChar.m_cLocation.Y && g_sGhost[3].EnemyUpdateRate > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y - 1] != W)
+                {
+                    g_sGhost[3].m_cLocation.Y -= 1;
+                    g_sGhost[3].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 3:
+            if (g_sGhost[3].m_cLocation.X <= g_sChar.m_cLocation.X && g_sGhost[3].EnemyUpdateRate > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X + 1][g_sGhost[3].m_cLocation.Y] != W)
+                {
+                    g_sGhost[3].m_cLocation.X += 1;
+                    g_sGhost[3].EnemyUpdateRate = 0;
+                }
+            }
+            break;
+        case 4:
+            if (g_sGhost[3].m_cLocation.Y <= g_sChar.m_cLocation.Y && g_sGhost[3].EnemyUpdateRate > 1)
+            {
+                if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y + 1] != W)
+                {
+                    if (g_sMap.mapArray[g_sGhost[3].m_cLocation.X][g_sGhost[3].m_cLocation.Y + 1] != D)
+                    {
+                        g_sGhost[3].m_cLocation.Y += 1;
+                        g_sGhost[3].EnemyUpdateRate = 0;
+                    }
+                }
+            }
+            break;
+        }
+    }
+        
+    
 }
  
 void renderGhost()
 {
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (g_sMap.mapArray[g_sGhost[i].m_cLocation.X][g_sGhost[i].m_cLocation.Y] != W)
-        {
-            g_Console.writeToBuffer(g_sGhost[0].m_cLocation, (char)31, 200);
-            g_Console.writeToBuffer(g_sGhost[1].m_cLocation, (char)31, 150);
-            g_Console.writeToBuffer(g_sGhost[2].m_cLocation, (char)31, 100);
-            g_Console.writeToBuffer(g_sGhost[3].m_cLocation, (char)31, 50);
-            //if (g_dElapsedTime > 1)
-            //{
-            //    g_Console.writeToBuffer(g_sGhost[0].m_cLocation, (char)31, 7);
-            //    g_sGhost[0].m_bActive = true;
-            //}
-            //if (g_dElapsedTime > 3)
-            //{
-            //    g_Console.writeToBuffer(g_sGhost[1].m_cLocation, (char)31, 7);
-            //    g_sGhost[1].m_bActive = true;
-            //}
-            //if (g_dElapsedTime > 5)
-            //{
-            //    g_Console.writeToBuffer(g_sGhost[2].m_cLocation, (char)31, 7);
-            //    g_sGhost[2].m_bActive = true;
-            //}
-            //if (g_dElapsedTime > 7)
-            //{
-            //    g_Console.writeToBuffer(g_sGhost[3].m_cLocation, (char)31, 7);
-            //    g_sGhost[3].m_bActive = true;
-            //}
-        }
-    }
+    g_Console.writeToBuffer(g_sGhost[0].m_cLocation, (char)31, 9);
+    g_Console.writeToBuffer(g_sGhost[1].m_cLocation, (char)31, 4);
+    g_Console.writeToBuffer(g_sGhost[2].m_cLocation, (char)31, 5);
+    g_Console.writeToBuffer(g_sGhost[3].m_cLocation, (char)31, 3);
+
+   
 }
 
 void renderlosescreen()
@@ -803,4 +1085,5 @@ void updateLoseScreen()
     }
 }
 
-    
+
+

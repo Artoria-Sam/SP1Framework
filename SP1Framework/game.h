@@ -60,9 +60,14 @@ struct SGameChar
     COORD m_cLocation;
     bool  m_bActive;
 
-    COORD m_dWaypoints[10];
+    COORD m_dWaypoints[14];
     COORD m_eWaypoints[4];
     int m_fDirection = 0;
+    int m_gDirection = 0;
+    double EnemyUpdateRate;
+    double EnemyUpdateRate2;
+    double RenderUpdateTimer;
+    int m_state; //0 = start, 1 = movement, 2 = exit spawn
 };
 
 
