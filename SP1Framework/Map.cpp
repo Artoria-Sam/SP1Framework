@@ -1,4 +1,5 @@
 #include "game.h"
+#include "game.h"
 #include "Framework\console.h"
 #include "Map.h"
 
@@ -10,9 +11,10 @@ Map::Map()
 	unsigned short W = 0;
 	unsigned short P = 20;
 	unsigned short D = 40;
+	unsigned short T = 1;
 	unsigned short data[80][25] =
 	{
-			W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
+			W,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,W,
 			W,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,W,
 			W,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,W,
 			W,P,W,W,W,W,W,W,P,W,W,W,W,W,W,W,P,W,W,W,W,W,W,P,W,
@@ -91,7 +93,7 @@ Map::Map()
 			W,P,W,W,W,W,W,W,P,W,W,W,W,W,W,W,P,W,W,W,W,W,W,P,W,
 			W,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,W,
 			W,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,W,
-			W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,W,
+			W,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,T,W,
 
 	};
 

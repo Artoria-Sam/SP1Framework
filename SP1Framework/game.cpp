@@ -29,7 +29,6 @@ SGameChar   g_sChar;
 SGameChar  g_sGhost[4];
 SGameChar   g_biscuit[10];
 int score;
-int bcount;
 EGAMESTATES g_eGameState = S_MENU; // initial state
 Map g_sMap;
 
@@ -72,11 +71,11 @@ void init( void )
     }
 
     for (int i = 0; i < 10; i++)
-    {
+    { 
         do {
             g_biscuit[i].m_cLocation.X = rand() % 80;
-            g_biscuit[i].m_cLocation.Y = rand() % 25;
-        } while (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] == W);
+            g_biscuit[i].m_cLocation.Y = rand() % 25; // 35 10 44 14
+        } while (g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] == W || g_sMap.mapArray[g_biscuit[i].m_cLocation.X][g_biscuit[i].m_cLocation.Y] == T ||  44 > g_biscuit[i].m_cLocation.X && g_biscuit[i].m_cLocation.X > 35 && 14 > g_biscuit[i].m_cLocation.Y &&   g_biscuit[i].m_cLocation.Y > 10);
         g_biscuit[i].m_bActive = true;
 
     } 
@@ -273,12 +272,14 @@ void updateGame()       // gameplay logic
 {
     processUserInput(); // checks if you should change states or do something else with the game, e.g. pause, exit
     moveCharacter();    // moves the character, collision detection, physics, etc
+    teleport();  
                         // sound can be played here too.
     UpdateGhost();
     ghostMovement();
     updatebiscuit();
     updateLoseScreen();
     updatewinscreen();
+    
 }
 
 
@@ -326,6 +327,7 @@ void moveCharacter()
         g_sChar.m_bActive = !g_sChar.m_bActive;        
     }
 
+    
    
 }
 void processUserInput()
@@ -561,6 +563,24 @@ void updatebiscuit()
    
 
     
+
+}
+
+
+
+void teleport()
+{
+
+    if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y] == T && g_sChar.m_cLocation.X < 1)
+    {
+        g_sChar.m_cLocation.X = 78;
+    }
+
+
+    if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y] == T && g_sChar.m_cLocation.X > 78)
+    {
+        g_sChar.m_cLocation.X = 1;
+    }
 
 }
 
@@ -819,12 +839,12 @@ void renderlosescreen()
 
 void updateLoseScreen()
 {
-    if (g_skKeyEvent[K_ESCAPE].keyReleased)
+    if (g_eGameState == EGAMESTATES::S_LOSE && g_skKeyEvent[K_ESCAPE].keyReleased)
     {
         g_bQuitGame = true;
     }
 
-    if (g_skKeyEvent[K_SPACE].keyReleased)
+    if (g_eGameState == EGAMESTATES::S_LOSE && g_skKeyEvent[K_SPACE].keyReleased)
     {
         g_eGameState = EGAMESTATES::S_RESTART;
         score = 0;
@@ -848,14 +868,16 @@ void renderwinscreen()
 
 void updatewinscreen()
 {
-    if (g_skKeyEvent[K_ESCAPE].keyReleased)
+    if (g_eGameState == EGAMESTATES::S_WIN && g_skKeyEvent[K_ESCAPE].keyReleased)
     {
         g_bQuitGame = true;
     }
 
-    if (g_skKeyEvent[K_SPACE].keyReleased)
+    if (g_eGameState == EGAMESTATES::S_WIN && g_skKeyEvent[K_SPACE].keyReleased)
     {
         g_eGameState = EGAMESTATES::S_RESTART;
         score = 0;
     }
 }
+
+
