@@ -61,11 +61,11 @@ void init( void )
     g_Console.setMouseHandler(mouseHandler);
 
     /* initialize random seed: */
-    srand(time(NULL));
+    srand(time (NULL));
 
     for (int i = 0; i < 4; i++)
     {
-            g_sGhost[i].m_cLocation.X = 37;
+            g_sGhost[i].m_cLocation.X = 37; 
             g_sGhost[i].m_cLocation.Y = 13;
             g_sGhost[i].m_bActive = false;
     }
