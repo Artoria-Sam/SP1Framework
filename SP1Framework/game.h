@@ -52,6 +52,7 @@ enum TERRAIN
     W = 0,
     P = 20,
     D = 40,
+    T = 1,
 };
 
 // struct for the game character
@@ -85,18 +86,21 @@ void processUserInput();    // checks if you should change states or do somethin
 void clearScreen();         // clears the current screen and draw from scratch 
 void renderSplashScreen();  // renders the splash screen
 void renderlosescreen();
+void renderwinscreen();
 void renderGame();          // renders the game stuff
 void renderMap();           // renders the map to the buffer first
 void renderCharacter();     // renders the character into the buffer
 void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
 void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 void renderInputEvents();   // renders the status of input events
+void teleport();
 void renderbiscuit(); 
 void updatebiscuit();
 void UpdateGhost();
 void ghostMovement();
 void renderGhost();
 void updateLoseScreen();
+void updatewinscreen();
 
 
 // keyboard and mouse input event managers
