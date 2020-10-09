@@ -44,7 +44,8 @@ enum EGAMESTATES
     S_WIN,
     S_LOSE,
     S_RESTART,
-    S_COUNT
+    S_COUNT,
+    S_DIE
 };
 
 enum TERRAIN
@@ -71,6 +72,7 @@ struct SGameChar
     double RenderUpdateTimer;
     double BerryTimer;
     int m_state; //0 = start, 1 = movement, 2 = exit spawn
+    int prev_move;
 };
 
 
@@ -105,6 +107,9 @@ void updateLoseScreen();
 void updatewinscreen();
 void renderBerry();
 void updateBerry();
+void updatedie();
+int prev__move();
+
 
 
 // keyboard and mouse input event managers
