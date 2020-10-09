@@ -44,7 +44,8 @@ enum EGAMESTATES
     S_WIN,
     S_LOSE,
     S_RESTART,
-    S_COUNT
+    S_COUNT,
+    S_DIE
 };
 
 enum TERRAIN
@@ -69,6 +70,7 @@ struct SGameChar
     double EnemyUpdateRate2;
     double RenderUpdateTimer;
     int m_state; //0 = start, 1 = movement, 2 = exit spawn
+    int prev_move;
 };
 
 
@@ -101,6 +103,9 @@ void ghostMovement();
 void renderGhost();
 void updateLoseScreen();
 void updatewinscreen();
+void updatedie();
+int prev__move();
+
 
 
 // keyboard and mouse input event managers
