@@ -108,7 +108,7 @@ void updatewinscreen();
 void renderBerry();
 void updateBerry();
 void updatedie();
-int prev__move();
+
 
 
 
