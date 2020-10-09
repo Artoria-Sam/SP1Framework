@@ -73,6 +73,7 @@ struct SGameChar
     double BerryTimer;
     int m_state; //0 = start, 1 = movement, 2 = exit spawn
     int prev_move;
+    bool m_bPostBerry;
 };
 
 

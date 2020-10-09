@@ -137,6 +137,10 @@ void init( void )
     g_sGhost[2].m_dWaypoints[12].Y = 9;
     g_sGhost[2].m_dWaypoints[13].X = 46;
     g_sGhost[2].m_dWaypoints[13].Y = 9;
+
+    g_sGhost[2].m_bPostBerry = false;
+    g_sGhost[2].m_gDirection = 0;
+    g_sChar.m_bBerry = false;
 }
 
 //--------------------------------------------------------------
@@ -731,6 +735,11 @@ void UpdateGhost()
         }
     }
 
+    if (g_sGhost[0].m_bActive == false && g_sGhost[1].m_bActive == false && g_sGhost[2].m_bActive == false && g_sGhost[3].m_bActive == false)
+    {
+        g_eGameState = S_WIN;
+    }
+
     for (int i = 0; i < 4; i++)
     {
         if (g_sGhost[i].m_bActive == true)
@@ -739,13 +748,13 @@ void UpdateGhost()
             {
                 g_sGhost[i].EnemyUpdateRate2 += g_dDeltaTime;
                 //EnemyUpdateRate3 += g_dDeltaTime;
-                if (g_sGhost[i].m_fDirection == 0)
+                if (g_sGhost[3].m_fDirection == 0)
                 {
                     if (g_sGhost[i].m_cLocation.X == g_sGhost[i].m_eWaypoints[0].X && g_sGhost[i].m_cLocation.Y == g_sGhost[i].m_eWaypoints[0].Y)
                     {
                         g_sGhost[i].m_fDirection = 1;
                     }
-                    else if (g_sGhost[i].EnemyUpdateRate > 0.4)
+                    else if (g_sGhost[i].EnemyUpdateRate2 > 0.4)
                     {
                         g_sGhost[i].m_cLocation.X++;
                         g_sGhost[i].EnemyUpdateRate2 = 0;
@@ -757,7 +766,7 @@ void UpdateGhost()
                     {
                         g_sGhost[i].m_fDirection = 2;
                     }
-                    else if (g_sGhost[i].EnemyUpdateRate > 0.4)
+                    else if (g_sGhost[i].EnemyUpdateRate2 > 0.4)
                     {
                         g_sGhost[i].m_cLocation.Y--;
                         g_sGhost[i].EnemyUpdateRate2 = 0;
@@ -769,7 +778,7 @@ void UpdateGhost()
                     {
                         g_sGhost[i].m_fDirection = 3;
                     }
-                    else if (g_sGhost[i].EnemyUpdateRate > 0.4)
+                    else if (g_sGhost[i].EnemyUpdateRate2 > 0.4)
                     {
                         g_sGhost[i].m_cLocation.X--;
                         g_sGhost[i].EnemyUpdateRate2 = 0;
@@ -781,7 +790,7 @@ void UpdateGhost()
                     {
                         g_sGhost[i].m_fDirection = 0;
                     }
-                    else if (g_sGhost[i].EnemyUpdateRate > 0.4)
+                    else if (g_sGhost[i].EnemyUpdateRate2 > 0.4)
                     {
                         g_sGhost[i].m_cLocation.Y++;
                         g_sGhost[i].EnemyUpdateRate2 = 0;
@@ -957,6 +966,7 @@ void UpdateGhost()
 
 void ghostMovement()
 {
+    int j = 0;
     if (g_sChar.m_bBerry == false)
     {
         if (g_sGhost[0].m_bActive == true)
@@ -1082,251 +1092,254 @@ void ghostMovement()
         {
             if (g_sGhost[2].m_state == 1)
             {
-                // 0 x-, 1 y+, 2 x+, 3 y-, 4 x+, 5 y+, 6 x+, 7 y+, 8 x-, 9 y-, 10 x+, 11 y+, 12 x+, 4 y+, 3 x-, 13 y-, 0 x-
-                g_sGhost[2].EnemyUpdateRate += g_dDeltaTime;
-                if (g_sGhost[2].m_gDirection == 0)
+                if (g_sGhost[2].m_bPostBerry == false)
                 {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[0].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[0].Y)
+                    // 0 x-, 1 y+, 2 x+, 3 y-, 4 x+, 5 y+, 6 x+, 7 y+, 8 x-, 9 y-, 10 x+, 11 y+, 12 x+, 4 y+, 3 x-, 13 y-, 0 x-
+                    g_sGhost[2].EnemyUpdateRate += g_dDeltaTime;
+                    if (g_sGhost[2].m_gDirection == 0)
                     {
-                        g_sGhost[2].m_gDirection = 1;
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[0].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[0].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 1;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
                     }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                    if (g_sGhost[2].m_gDirection == 1)
                     {
-                        g_sGhost[2].m_cLocation.X--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[1].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[1].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 2;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 2)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[2].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[2].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 3;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 3)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[3].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[3].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 4;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 4)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[4].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[4].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 5;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 5)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[5].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[5].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 6;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 6)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[6].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[6].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 7;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 7)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[7].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[7].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 8;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 8)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[8].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[8].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 9;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 9)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[9].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[9].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 10;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 10)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[10].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[10].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 11;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 11)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[11].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[11].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 12;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 12)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[12].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[12].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 13;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 13)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[4].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[4].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 14;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y++;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 14)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[3].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[3].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 15;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.X--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
+                    }
+                    if (g_sGhost[2].m_gDirection == 15)
+                    {
+                        if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[13].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[13].Y)
+                        {
+                            g_sGhost[2].m_gDirection = 0;
+                        }
+                        else if (g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            g_sGhost[2].m_cLocation.Y--;
+                            g_sGhost[2].EnemyUpdateRate = 0;
+                        }
                     }
                 }
-                if (g_sGhost[2].m_gDirection == 1)
+                if (g_sGhost[2].m_bPostBerry == true)
                 {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[1].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[1].Y)
+                    g_sGhost[2].EnemyUpdateRate += g_dDeltaTime;
+                    int random2 = rand() % 8 + 1;
+                    switch (random2)
                     {
-                        g_sGhost[2].m_gDirection = 2;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
+                    case 1:
+                        if (g_sGhost[2].m_cLocation.X < g_Console.getConsoleSize().X - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X + 1][g_sGhost[2].m_cLocation.Y] != W)
+                            {
+                                g_sGhost[2].m_cLocation.X++;
+                                g_sGhost[2].EnemyUpdateRate = 0;
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (g_sGhost[2].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != W)
+                            {
+                                if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != D)
+                                {
+                                    g_sGhost[2].m_cLocation.Y++;
+                                    g_sGhost[2].EnemyUpdateRate = 0;
+                                }
+                            }
+                        }
+                        break;
+                    case 3:
+                        if (g_sGhost[2].m_cLocation.X > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X - 1][g_sGhost[2].m_cLocation.Y] != W)
+                            {
+                                g_sGhost[2].m_cLocation.X--;
+                                g_sGhost[2].EnemyUpdateRate = 0;
+                            }
+                        }
+                        break;
+                    case 4:
+                        if (g_sGhost[2].m_cLocation.Y > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
+                        {
+                            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y - 1] != W)
+                            {
+                                g_sGhost[2].m_cLocation.Y--;
+                                g_sGhost[2].EnemyUpdateRate = 0;
+                            }
+                        }
+                        break;
                     }
                 }
-                if (g_sGhost[2].m_gDirection == 2)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[2].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[2].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 3;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 3)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[3].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[3].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 4;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 4)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[4].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[4].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 5;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 5)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[5].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[5].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 6;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 6)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[6].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[6].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 7;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 7)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[7].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[7].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 8;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 8)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[8].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[8].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 9;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 9)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[9].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[9].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 10;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 10)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[10].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[10].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 11;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 11)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[11].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[11].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 12;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 12)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[12].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[12].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 13;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 13)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[4].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[4].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 14;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y++;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 14)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[3].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[3].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 15;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.X--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-                if (g_sGhost[2].m_gDirection == 15)
-                {
-                    if (g_sGhost[2].m_cLocation.X == g_sGhost[2].m_dWaypoints[13].X && g_sGhost[2].m_cLocation.Y == g_sGhost[2].m_dWaypoints[13].Y)
-                    {
-                        g_sGhost[2].m_gDirection = 0;
-                    }
-                    else if (g_sGhost[2].EnemyUpdateRate > 0.4)
-                    {
-                        g_sGhost[2].m_cLocation.Y--;
-                        g_sGhost[2].EnemyUpdateRate = 0;
-                    }
-                }
-
-
-                //int random2 = rand() % 8 + 1;
-                //switch (random2)
-                //{
-
-                //case 1:
-                //    if (g_sGhost[2].m_cLocation.X < g_Console.getConsoleSize().X - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
-                //    {
-                //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X + 1][g_sGhost[2].m_cLocation.Y] != W)
-                //        {
-                //            g_sGhost[2].m_cLocation.X++;
-                //            g_sGhost[2].EnemyUpdateRate = 0;
-                //        }
-                //    }
-                //    break;
-                //case 2:
-                //    if (g_sGhost[2].m_cLocation.Y < g_Console.getConsoleSize().Y - 1 && g_sGhost[2].EnemyUpdateRate > 0.4)
-                //    {
-                //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != W)
-                //        {
-                //            if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y + 1] != D)
-                //            {
-                //                g_sGhost[2].m_cLocation.Y++;
-                //                g_sGhost[2].EnemyUpdateRate = 0;
-                //            }
-                //        }
-                //    }
-                //    break;
-                //case 3:
-                //    if (g_sGhost[2].m_cLocation.X > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
-                //    {
-                //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X - 1][g_sGhost[2].m_cLocation.Y] != W)
-                //        {
-                //            g_sGhost[2].m_cLocation.X--;
-                //            g_sGhost[2].EnemyUpdateRate = 0;
-                //        }
-                //    }
-                //    break;
-                //case 4:
-                //    if (g_sGhost[2].m_cLocation.Y > 0 && g_sGhost[2].EnemyUpdateRate > 0.4)
-                //    {
-                //        if (g_sMap.mapArray[g_sGhost[2].m_cLocation.X][g_sGhost[2].m_cLocation.Y - 1] != W)
-                //        {
-                //            g_sGhost[2].m_cLocation.Y--;
-                //            g_sGhost[2].EnemyUpdateRate = 0;
-                //        }
-                //    }
-                //    break;
-
-                //}
             }
         }
         if (g_sGhost[3].m_bActive == true)
@@ -1386,6 +1399,7 @@ void ghostMovement()
     }
     if (g_sChar.m_bBerry == true)
     {
+        g_sGhost[2].m_bPostBerry = true;
         if (g_sGhost[0].m_bActive == true)
         {
             if (g_sGhost[0].m_state == 1)
