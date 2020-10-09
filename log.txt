@@ -1,0 +1,77 @@
+Author:SAMUEL PECK CHENG HAI commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:SAMUEL PECK CHENG HAI commit:Waypoint ghost changes
+Author:Khorona commit:constant movement char
+Author:SAMUEL PECK CHENG HAI commit:Bug fixes
+Author:SAMUEL PECK CHENG HAI commit:Merging
+Author:SAMUEL PECK CHENG HAI commit:Berry and Ghost run away movement
+Author:Khorona commit:Snake Ghost, Lives
+Author:Khorona commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:Khorona commit:again
+Author:SAMUEL PECK CHENG HAI commit:ghoat exit starting point
+Author:SAMUEL PECK CHENG HAI commit:waypoints for ghost 3
+Author:Khorona commit:Teleport
+Author:Khorona commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:Khorona commit:win condition
+Author:SAMUEL PECK CHENG HAI commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:SAMUEL PECK CHENG HAI commit:Ghost Starting Movement
+Author:Khorona commit:score
+Author:Khorona commit:lose screen
+Author:Khorona commit:fix
+Author:SAMUEL PECK CHENG HAI commit:Ghost Player chasing
+Author:SAMUEL PECK CHENG HAI commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:SAMUEL PECK CHENG HAI commit:Ghost Spawning and Movement
+Author:Khorona commit:Merge branch 'master' of https://github.com/Artoria-Sam/SP1Framework
+Author:Khorona commit:more biscuit
+Author:SAMUEL PECK CHENG HAI commit:test
+Author:SAMUEL PECK CHENG HAI commit:Collusion
+Author:Khorona commit:cookie
+Author:SAMUEL PECK CHENG HAI commit:Map
+Author:SAMUEL PECK CHENG HAI commit:Testing
+Author:Khorona commit:hi testing
+Author:SIM TZE JAN commit:added winmm.lib to the dependency in Release mode
+Author:SIM TZE JAN commit:Updated the framework to show how event input handlers work Added a keyboard input handler Added a mouse input handler Sample code on how to interpret input events.
+Author:SIM TZE JAN commit:Implemented Event based input for keyboard and mouse If a keyboard or mouse event has triggered in the console, it will call the respective keyboard or mouse handler set by the user.
+Author:Sim Tze Jan commit:Added in a parameter in writeToBuffer to indicate the length of the string to write. Without this parameter, the function will write until the null character.
+Author:SIM TZE JAN commit:Optimise the writeToBuffer function so that it does not need to check the length of the string. clearBuffer now access the memory location once, instead of twice. writeToConsole does not need to create temporary variables anymore.
+Author:SIM TZE JAN commit:Updated project file for Visual Studio 2013
+Author:Sim Tze Jan commit:Updated some tips
+Author:Sim Tze Jan commit:Update Readme.md
+Author:unknown commit:Fixed a bug in resizing the console window size. Now the console size scales beautifully.
+Author:Sim Tze Jan commit:Merge branch 'master' of https://github.com/tzejan/SP1Framework
+Author:Sim Tze Jan commit:Bug fix in the calculation of the last index in the screen buffer
+Author:tzejan commit:Update README.md
+Author:Sim Tze Jan commit:Added a better example of what is expected in the update and render loops Added a debouncing code. To prevent accidental trigger of actions because of high framerates and slow human reflexes.
+Author:Sim Tze Jan commit:renamed console variable
+Author:Sim Tze Jan commit:Merge branch 'writeToBuffer'
+Author:unknown commit:Added in comments by Victor
+Author:tzejan commit:Update README.md
+Author:tzejan commit:Update README.md
+Author:Sim Tze Jan commit:Added in a function to set the console font
+Author:Sim Tze Jan commit:Added overload functions for write to buffer so that it does not need to take in a COORD type
+Author:Sim Tze Jan commit:put the codes into their respective functions added more comments to guide users of this framework
+Author:Sim Tze Jan commit:Write to buffer functions are now in the console object Added more comments and description to help students with the framework
+Author:Sim Tze Jan commit:Merge branch 'writeToBuffer' of https://github.com/tzejan/SP1Framework into writeToBuffer
+Author:Sim Tze Jan commit:Pass the C++ string as a reference instead
+Author:Jan Sim commit:Reuse code for writing to buffer Fixed a bug in writing buffer to console output
+Author:tzejan commit:Update README.md
+Author:tzejan commit:Update README.md
+Author:Jan Sim commit:Added default parameter for attribute Put in sample code
+Author:Sim Tze Jan commit:A faster console output No more flickers!
+Author:Sim Tze Jan commit:test writing to a buffer then displaying it on the console
+Author:tzejan commit:Update README.md
+Author:tzejan commit:Updated readme
+Author:Sim Tze Jan commit:Merge branch 'master' of https://github.com/tzejan/SP1Framework into SetConsoleSize
+Author:Sim Tze Jan commit:Added a function to set the size of the console
+Author:tzejan commit:Update README.md
+Author:Sim Tze Jan commit:Added the output for elapsed time Added a delta time variable
+Author:Sim Tze Jan commit:Merge branch 'master' of https://github.com/tzejan/SP1Framework
+Author:Sim Tze Jan commit:Comment about potential bug
+Author:Jan Sim commit:Update gotoXY function to take in COORD Implemented a function to detect keypress Gets the size of the console for limiting character movement purposes Implement a simple character movement with arrow key presses Renders a test coloured text Reduced frame rate to 5FPS Introduced beep sound Changed game loop to loop with a flag instead of returning from function Removed commented out code
+Author:Jan Sim commit:Sample of getting the state of keys
+Author:Jan Sim commit:Merge branch 'master' of https://github.com/tzejan/SP1Framework
+Author:Sim Tze Jan commit:Added delta time to update function Used FPS to calculate frame time Used proper naming convention for global variables Updated timer class to keep track of elapsed time
+Author:Sim Tze Jan commit:Added timer windows console stuff game loop update loop render loop
+Author:Jan Sim commit:Updated ignore files
+Author:Jan Sim commit:Merge branch 'master' of https://github.com/tzejan/SP1Framework
+Author:Jan Sim commit:First commit for the SP1 Framework
+Author:tzejan commit:Initial commit
