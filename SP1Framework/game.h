@@ -60,6 +60,7 @@ struct SGameChar
 {
     COORD m_cLocation;
     bool  m_bActive;
+    bool  m_bBerry;
 
     COORD m_dWaypoints[14];
     COORD m_eWaypoints[4];
@@ -68,6 +69,7 @@ struct SGameChar
     double EnemyUpdateRate;
     double EnemyUpdateRate2;
     double RenderUpdateTimer;
+    double BerryTimer;
     int m_state; //0 = start, 1 = movement, 2 = exit spawn
 };
 
@@ -101,6 +103,8 @@ void ghostMovement();
 void renderGhost();
 void updateLoseScreen();
 void updatewinscreen();
+void renderBerry();
+void updateBerry();
 
 
 // keyboard and mouse input event managers
