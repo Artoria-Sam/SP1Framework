@@ -20,6 +20,7 @@ double EnemyUpdateRate = 0.0;
 double EnemyUpdateRate2 = 0.0;
 double EnemyUpdateRate3 = 0.0;
 double EnemyUpdateRate4 = 0.0;
+double Charupdaterate = 0.0;
 
 
 SKeyEvent g_skKeyEvent[K_COUNT];
@@ -33,6 +34,7 @@ SGameChar g_sBerry[4];
 int score;
 int prev_move;
 int lives = 3;
+int movement = 0;
 EGAMESTATES g_eGameState = S_GAME; // initial state
 Map g_sMap;
 
@@ -348,25 +350,38 @@ void updateGame()       // gameplay logic
 
 
 void moveCharacter()
-{    
+{
     // Updating the location of the character based on the key release
     // providing a beep sound whenver we shift the character
+    g_sChar.Charupdaterate += g_dDeltaTime;
+   
     if (g_skKeyEvent[K_UP].keyReleased && g_sChar.m_cLocation.Y > 0)
     {
-        if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y - 1] != W)
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y - 1] != W )
         {
             //Beep(1440, 30);
+            movement = 1;
             g_sChar.m_cLocation.Y--;
+            g_sChar.Charupdaterate = 0;
         }
+
     }
+
+
+    
     if (g_skKeyEvent[K_LEFT].keyReleased && g_sChar.m_cLocation.X > 0)
     {
-        if (g_sMap.mapArray[g_sChar.m_cLocation.X - 1][g_sChar.m_cLocation.Y] != W)
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X - 1][g_sChar.m_cLocation.Y] != W )
         {
             //Beep(1440, 30);
+            movement = 2;
             g_sChar.m_cLocation.X--;
+            g_sChar.Charupdaterate = 0;
         }
     }
+
+
+
     if (g_skKeyEvent[K_DOWN].keyReleased && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
     {
         if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y + 1] != W)
@@ -374,25 +389,81 @@ void moveCharacter()
             if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y + 1] != D)
             {
                 //Beep(1440, 30);
+                movement = 3;
                 g_sChar.m_cLocation.Y++;
+                g_sChar.Charupdaterate = 0;
             }
         }
     }
+
+
     if (g_skKeyEvent[K_RIGHT].keyReleased && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
     {
-        if (g_sMap.mapArray[g_sChar.m_cLocation.X + 1][g_sChar.m_cLocation.Y] != W)
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X + 1][g_sChar.m_cLocation.Y] != W )
         {
             //Beep(1440, 30);
+            movement = 4;
             g_sChar.m_cLocation.X++;
+            g_sChar.Charupdaterate = 0;
         }
     }
+
     if (g_skKeyEvent[K_SPACE].keyReleased)
     {
-        g_sChar.m_bActive = !g_sChar.m_bActive;        
+        g_sChar.m_bActive = !g_sChar.m_bActive;
     }
 
-    
-   
+
+    if (movement == 4)
+    {
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X + 1][g_sChar.m_cLocation.Y] != W && g_sChar.Charupdaterate > 0.2)
+        {
+            //Beep(1440, 30);
+            movement = 4;
+            g_sChar.m_cLocation.X++;
+            g_sChar.Charupdaterate = 0;
+        }
+    }
+
+
+    {
+        if (movement == 1)
+        {
+            if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y - 1] != W && g_sChar.Charupdaterate > 0.2)
+            {
+                //Beep(1440, 30);
+
+                g_sChar.m_cLocation.Y--;
+                g_sChar.Charupdaterate = 0;
+            }
+        }
+    }
+
+    if (movement == 3)
+    {
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y + 1] != W)
+        {
+            if (g_sMap.mapArray[g_sChar.m_cLocation.X][g_sChar.m_cLocation.Y + 1] != D && g_sChar.Charupdaterate > 0.2)
+            {
+                //Beep(1440, 30);
+                g_sChar.m_cLocation.Y++;
+                g_sChar.Charupdaterate = 0;
+            }
+        }
+    }
+
+    if (movement == 2)
+
+    {
+        if (g_sMap.mapArray[g_sChar.m_cLocation.X - 1][g_sChar.m_cLocation.Y] != W && g_sChar.Charupdaterate > 0.2)
+        {
+            //Beep(1440, 30);
+
+            g_sChar.m_cLocation.X--;
+            g_sChar.Charupdaterate = 0;
+        }
+    }
+
 }
 void processUserInput()
 {
@@ -725,7 +796,7 @@ void UpdateGhost()
             if (g_sChar.m_cLocation.X == g_sGhost[i].m_cLocation.X &&
                 g_sChar.m_cLocation.Y == g_sGhost[i].m_cLocation.Y && g_sGhost[i].m_bActive == true && g_sChar.m_bBerry == false)
             {
-                g_eGameState = S_LOSE;
+                g_eGameState = S_DIE;
             }
             if (g_sChar.m_cLocation.X == g_sGhost[i].m_cLocation.X &&
                 g_sChar.m_cLocation.Y == g_sGhost[i].m_cLocation.Y && g_sGhost[i].m_bActive == true && g_sChar.m_bBerry == true)

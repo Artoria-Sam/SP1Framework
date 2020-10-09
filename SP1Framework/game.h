@@ -71,6 +71,7 @@ struct SGameChar
     double EnemyUpdateRate2;
     double RenderUpdateTimer;
     double BerryTimer;
+    double Charupdaterate;
     int m_state; //0 = start, 1 = movement, 2 = exit spawn
     int prev_move;
     bool m_bPostBerry;
